@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inferno Secret Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* styles.css */
+body {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #0f0f0f;
+    color: #00ff00;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+#chat {
+    width: 90%;
+    height: 60%;
+    background-color: #1e1e1e;
+    border: 2px solid #00ff00;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+#messages {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-container {
+    display: flex;
+    width: 90%;
+    margin-top: 20px;
+}
+
+#messageInput, #passwordInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 2px solid #00ff00;
+    background-color: #1e1e1e;
+    color: #00ff00;
+}
+
+#sendMessage, #enterPassword {
+    background-color: #00ff00;
+    color: #0f0f0f;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container" id="loginScreen">
+        <header>
+            <h1>Enter Password</h1>
+        </header>
+        <div class="input-container">
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="enterPassword">Enter</button>
+        </div>
+        <p id="errorMessage" style="color:red; display:none;">Incorrect password, try again.</p>
+    </div>
+
+    <div class="container" id="chatScreen" style="display:none;">
+        <header>
+            <h1>Welcome to Inferno</h1>
+        </header>
+        <div id="chat">
+            <div id="messages"></div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+    <script>
+       // scripts.js
+
+// Constants
+const correctPassword = '1984';
+
+// Elements
+const loginScreen = document.getElementById('loginScreen');
+const chatScreen = document.getElementById('chatScreen');
+const passwordInput = document.getElementById('passwordInput');
+const enterPasswordButton = document.getElementById('enterPassword');
+const errorMessage = document.getElementById('errorMessage');
+const messageInput = document.getElementById('messageInput');
+const sendMessageButton = document.getElementById('sendMessage');
+const messagesContainer = document.getElementById('messages');
+
+// Function to unlock chat if password is correct
+enterPasswordButton.addEventListener('click', function() {
+    const enteredPassword = passwordInput.value;
+    if (enteredPassword === correctPassword) {
+        localStorage.setItem('isAuthenticated', 'true');
+        loginScreen.style.display = 'none';
+        chatScreen.style.display = 'flex';
+        loadMessages();
+    } else {
+        errorMessage.style.display = 'block';
+    }
+});
+
+// Check if the user is already authenticated
+if (localStorage.getItem('isAuthenticated') === 'true') {
+    loginScreen.style.display = 'none';
+    chatScreen.style.display = 'flex';
+    loadMessages();
+}
+
+// Function to send a message
+sendMessageButton.addEventListener('click', function() {
+    const messageText = messageInput.value.trim();
+    if (messageText) {
+        addMessage(messageText);
+        messageInput.value = '';
+        saveMessages();
+    }
+});
+
+// Function to add a message to the chat
+function addMessage(text) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = text;
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Function to save messages to local storage
+function saveMessages() {
+    const messages = Array.from(messagesContainer.children).map(message => message.textContent);
+    localStorage.setItem('infernoMessages', JSON.stringify(messages));
+}
+
+// Function to load messages from local storage
+function loadMessages() {
+    const savedMessages = JSON.parse(localStorage.getItem('infernoMessages') || '[]');
+    savedMessages.forEach(addMessage);
+}
+
+// Clear local storage for development purposes (can be removed in production)
+// localStorage.clear();
+
+
+    </script>
+</body>
+</html>
