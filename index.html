@@ -140,25 +140,7 @@ const messageInput = document.getElementById('messageInput');
 const sendMessageButton = document.getElementById('sendMessage');
 const messagesContainer = document.getElementById('messages');
 
-// Function to unlock chat if password is correct
-enterPasswordButton.addEventListener('click', function() {
-    const enteredPassword = passwordInput.value;
-    if (enteredPassword === correctPassword) {
-        localStorage.setItem('isAuthenticated', 'true');
-        loginScreen.style.display = 'none';
-        chatScreen.style.display = 'flex';
-        loadMessages();
-    } else {
-        errorMessage.style.display = 'block';
-    }
-});
 
-// Check if the user is already authenticated
-if (localStorage.getItem('isAuthenticated') === 'true') {
-    loginScreen.style.display = 'none';
-    chatScreen.style.display = 'flex';
-    loadMessages();
-}
 
 // Function to send a message to Firebase
 sendMessageButton.addEventListener('click', function() {
