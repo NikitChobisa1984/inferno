@@ -6,8 +6,7 @@
     <title>Inferno Secret Chat</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* styles.css */
-body {
+        body {
     margin: 0;
     font-family: 'Courier New', Courier, monospace;
     background-color: #0f0f0f;
@@ -90,13 +89,54 @@ header h1 {
             <button id="sendMessage">Send</button>
         </div>
     </div>
-    <script>
-       // scripts.js
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+    <script src="scripts.js">
+        // Firebase Configuration
+// Import the functions you need from the SDKs you need
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+  // Your web app's Firebase configuration
+
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyDhn51-a_k3jGFgt1pWf_fNnr3gAd02cCM",
+
+    authDomain: "inferno---the-secret-syndicate.firebaseapp.com",
+
+    projectId: "inferno---the-secret-syndicate",
+
+    storageBucket: "inferno---the-secret-syndicate.appspot.com",
+
+    messagingSenderId: "87319334121",
+
+    appId: "1:87319334121:web:272b2c1e3f2f4d29447478",
+
+    measurementId: "G-V920H01CTQ"
+
+  };
+
+
+  // Initialize Firebase
+
+  const app = initializeApp(firebaseConfig);
+
+  const analytics = getAnalytics(app);
+
 
 // Constants
-const correctPassword = '2012';
-
-// Elements
+const correctPassword = '1984';
 const loginScreen = document.getElementById('loginScreen');
 const chatScreen = document.getElementById('chatScreen');
 const passwordInput = document.getElementById('passwordInput');
@@ -126,15 +166,23 @@ if (localStorage.getItem('isAuthenticated') === 'true') {
     loadMessages();
 }
 
-// Function to send a message
+// Function to send a message to Firebase
 sendMessageButton.addEventListener('click', function() {
     const messageText = messageInput.value.trim();
     if (messageText) {
-        addMessage(messageText);
+        database.ref('messages').push({ text: messageText });
         messageInput.value = '';
-        saveMessages();
     }
 });
+
+// Load messages from Firebase
+function loadMessages() {
+    const messagesRef = database.ref('messages');
+    messagesRef.on('child_added', (snapshot) => {
+        const message = snapshot.val();
+        addMessage(message.text);
+    });
+}
 
 // Function to add a message to the chat
 function addMessage(text) {
@@ -143,22 +191,6 @@ function addMessage(text) {
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-
-// Function to save messages to local storage
-function saveMessages() {
-    const messages = Array.from(messagesContainer.children).map(message => message.textContent);
-    localStorage.setItem('infernoMessages', JSON.stringify(messages));
-}
-
-// Function to load messages from local storage
-function loadMessages() {
-    const savedMessages = JSON.parse(localStorage.getItem('infernoMessages') || '[]');
-    savedMessages.forEach(addMessage);
-}
-
-// Clear local storage for development purposes (can be removed in production)
-// localStorage.clear();
-
 
     </script>
 </body>
