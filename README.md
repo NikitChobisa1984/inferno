@@ -1,2 +1,2 @@
-Shh... For members only....
-Actually, this is the official website of our club. It is currently under development.
+A website using Firebase configuration.
+A private, members-only website.
