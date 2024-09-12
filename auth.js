@@ -1,5 +1,5 @@
-// js/auth.js
-import { auth } from 'firebase.js';
+// auth.js
+import { auth } from './firebase.js';
 import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
 
 const loginForm = document.getElementById('login-form');
